@@ -8,7 +8,7 @@ const item_controller = require("../controllers/itemController");
 //inventory routes//
 
 //GET inventory home page//
-router.get("/", category_controller.index);
+router.get("/", category_controller);
 
 //GET request for creating a Category. (Must come before routes that contine category ids)//
 router.get("/category/create", category_controller.category_create_get);

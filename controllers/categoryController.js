@@ -3,7 +3,16 @@ const asyncHandler = require("express-async-handler");
 
 //Display a list of all categories//
 exports.category_list = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Category List");
+    //just return the name//
+    const allCategories = await Category.find({}, "name")
+    //sort categories alphabetically//
+    .sort({name: 1})
+    //populate name instead of id//
+    .populate("name")
+    //execute query and return a promise//
+    .exec();
+    //render category list//
+    res.render("category_list", { title: "Category List", category_list: allCategories});
 });
 
 //Display a detail page for each category//
