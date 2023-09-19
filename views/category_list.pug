@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  //- h1= title
+  //- p Welcome to #{title}, an inventory site. 
+
+  h1 Tea Inventory Site
+
+  h2 Tea Catagories
+
+  ul 
+    each category in category_list
+      li 
+        a(href=category.url) #{category.category_name}
+        //- | (#{category.category_name})
+    else
+      li There are no more categories.
+
+  //- dl
+  //-     each category in categories_list
+  //-       dt
+  //-         a(href=book.url) #{book.title}
+  //-       dd #{book.summary}
+
+  //-     else
+  //-       p This author has no books.
+

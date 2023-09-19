@@ -1,25 +1,36 @@
+// const category = require("../models/category");
 const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
+// const CategoryInstance = require("../models/categoryinstance");
+
 
 //Display a list of all categories//
 exports.category_list = asyncHandler(async (req, res, next) => {
-    //just return the name//
-    const allCategories = await Category.find({}, "name")
-    //sort categories alphabetically//
-    .sort({name: 1})
-    //populate name instead of id//
-    .populate("name")
-    //execute query and return a promise//
-    .exec();
-    //render category list//
-    res.render("category_list", { title: "Category List", category_list: allCategories});
+    const categoryInstances = await 
+    Category.find().populate().exec()
+    //     //render category list//
+    res.render("category_list", {
+        // debug:JSON.stringify(categoryInstances),
+        // title: category.name,
+        // category: category,
+        category_list: categoryInstances
+    });
 });
+
 
 //Display a detail page for each category//
 exports.category_detail = asyncHandler(async (req, res, next) => {
-    res.send(`Not Created Yet: Category Detail:
-    ${req.params.id}`);
+    const [category, allCategories] = await Promise.all([
+        Category.findById(req.params.id).exec(),
+    ])
+    
+    res.render("category_name", {
+        title: "Category Name",
+        category: category,
+        category_name: allCategories,
+    })
 });
+
 
 //Display Category create form on GET//
 exports.category_create_get = asyncHandler(async (req, res, next) => {
