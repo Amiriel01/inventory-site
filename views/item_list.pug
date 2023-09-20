@@ -1,23 +1,15 @@
-//- extends layout
+extends layout
 
-//- block content
+block content
 
-//-   h3 Tea Varieties:
+  h3 Tea Varieties:
 
-  //- ul 
-  //-   each item in item_list
-  //-     li 
-  //-       a(href=item.url) #{item.item_name}
+  ul 
+    each item in item_list
+      li 
+        a(href=item.url) #{item.item_name}
         
-  //-   else
-  //-     li There are no more categories.
+    else
+      li There are no more categories.
 
-  //- dl
-  //-     each category in categories_list
-  //-       dt
-  //-         a(href=book.url) #{book.title}
-  //-       dd #{book.summary}
-
-  //-     else
-  //-       p This author has no books.
 
