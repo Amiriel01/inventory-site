@@ -6,8 +6,7 @@ const asyncHandler = require("express-async-handler");
 
 //Display a list of all categories//
 exports.category_list = asyncHandler(async (req, res, next) => {
-    const categoryInstances = await 
-    Category.find().populate().exec()
+    const categoryInstances = await Category.find().populate().exec()
     //     //render category list//
     res.render("category_list", {
         // debug:JSON.stringify(categoryInstances),
@@ -20,14 +19,11 @@ exports.category_list = asyncHandler(async (req, res, next) => {
 
 //Display a detail page for each category//
 exports.category_detail = asyncHandler(async (req, res, next) => {
-    const [category, allCategories] = await Promise.all([
-        Category.findById(req.params.id).exec(),
-    ])
+    const category = await Category.findById(req.params.id).exec()
     
-    res.render("category_name", {
-        title: "Category Name",
-        category: category,
-        category_name: allCategories,
+    res.render("category_detail", {
+        //pass in list of items//
+        category_name: category.category_name,
     })
 });
 

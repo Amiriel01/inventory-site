@@ -3,7 +3,10 @@ const asyncHandler = require("express-async-handler");
 
 //Display a list of all items//
 exports.item_list = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Item List");
+    const itemInstances = await Item.find().populate().exec()
+    res.render("category_detail", {
+        item_list: itemInstances
+    });
 });
 
 //Display a detail page for each item//

@@ -7,7 +7,7 @@ const item_controller = require("../controllers/itemController");
 
 //inventory routes//
 
-// // //GET inventory home page//
+//GET inventory home page//
 router.get("/category", category_controller.category_list);
 
 //GET request for creating a Category. (Must come before routes that contine category ids)//
@@ -29,10 +29,10 @@ router.get("/category/:id/update", category_controller.category_update_get);
 router.post("/category/:id/update", category_controller.category_update_post);
 
 //GET request for one Category//
-// router.get("/category/:id", category_controller.category_detail);
+router.get("/category/:id", category_controller.category_detail);
 
-//GET request for a list of all Categories//
-router.get("/categories", category_controller.category_list);
+// //GET request for a list of all Categories//
+// router.get("/categories", category_controller.category_list);
 
 //list routes//
 
