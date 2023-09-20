@@ -2,6 +2,7 @@
 const Category = require("../models/category");
 const asyncHandler = require("express-async-handler");
 // const CategoryInstance = require("../models/categoryinstance");
+const Item = require("../models/item");
 
 
 //Display a list of all categories//
@@ -9,9 +10,6 @@ exports.category_list = asyncHandler(async (req, res, next) => {
     const categoryInstances = await Category.find().populate().exec()
     //     //render category list//
     res.render("category_list", {
-        // debug:JSON.stringify(categoryInstances),
-        // title: category.name,
-        // category: category,
         category_list: categoryInstances
     });
 });
@@ -19,11 +17,22 @@ exports.category_list = asyncHandler(async (req, res, next) => {
 
 //Display a detail page for each category//
 exports.category_detail = asyncHandler(async (req, res, next) => {
-    const category = await Category.findById(req.params.id).exec()
-    
+    // const category = await Category.findById(req.params.id).exec()
+    const [category, allTeaInCategory] = await Promise.all([
+        Category.findById(req.params.id).exec(),
+        Item.find({ category_name: req.params.id }).exec(),
+    ]);
+
+    if (category === null) {
+        const err = new Error("Category Not Found");
+        err.status = 404;
+        return next(err);
+    }
+    console.log(allTeaInCategory)
     res.render("category_detail", {
         //pass in list of items//
         category_name: category.category_name,
+        category_items: allTeaInCategory,
     })
 });
 

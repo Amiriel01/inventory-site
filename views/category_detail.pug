@@ -6,13 +6,13 @@ block content
     
     h2 #{category_name} 
 
-    //- ul 
-    //- each item in item_list
-    //-   li 
-    //-     a(href=item.url) #{item.item_name}
+    ul 
+        each item in category_items
+            li 
+                a(href=item.url) #{item.item_name}
     
-    //- else
-    //-   li There are no more items.
+        else
+            li There are no more items.
 
 
 
