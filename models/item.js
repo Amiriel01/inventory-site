@@ -7,7 +7,7 @@ const ItemSchema = new Schema({
     item_description: { type: String, required: true, maxLength: 300 },
     category_name: { type: String, required: true },
     category_id: { type: Schema.Types.ObjectId, ref: "Category", required: true },
-    item_price: { type: Number, required: true },
+    item_price: { type: String, required: true },
     number_in_stock: { type: Number, required: true }
 });
 
