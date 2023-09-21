@@ -37,14 +37,15 @@ async function categoryCreate(index, category_name) {
   const category = new Category({ category_name: category_name });
   await category.save();
   categories[index] = category;
-  console.log(`Added category: ${category_name}`);
+  // console.log(`Added category: ${category_name}`);
 }
 
-async function itemCreate(index, item_name, item_description, category_name, item_price, number_in_stock) {
+async function itemCreate(index, item_name, item_description, category_name, category_id, item_price, number_in_stock) {
   const itemDetail = { 
     item_name: item_name, 
     item_description:item_description,
     category_name: category_name,
+    category_id: category_id,
     item_price: item_price,
     number_in_stock: number_in_stock,
   };
@@ -76,6 +77,7 @@ async function getItems() {
     itemCreate(0,
       "Classic Green Tea",
       "The Classic Green Tea is a simple light green tea.",
+      "Green Tea",
       categories[0],
       "2.25",
       "877"
@@ -83,6 +85,7 @@ async function getItems() {
     itemCreate(1,
       "Peach Green Tea",
       "Peach Green Tea has a light peach flavor.",
+      "Green Tea",
       categories[0],
       "3.50",
       "250"
@@ -90,6 +93,7 @@ async function getItems() {
     itemCreate(2,
       "White Grape Green Tea",
       "Hints of white grape can be found in this light green tea.",
+      "Green Tea",
       categories[0],
       "5.50",
       "125"
@@ -97,6 +101,7 @@ async function getItems() {
     itemCreate(3,
       "Earl Grey",
       "Earl Grey has a black tea base flavored with oil from the rind of bergamot orange.",
+      "Black Tea",
       categories[1],
       "3.99",
       "15"
@@ -104,6 +109,7 @@ async function getItems() {
     itemCreate(4,
       "Vanilla Chai",
       "Vanilla Chai is a tea blend of Yunnan black tea and classic chai spices.",
+      "Black Tea",
       categories[1],
       "2.50",
       "87"
@@ -111,6 +117,7 @@ async function getItems() {
     itemCreate(5,
       "Irish Breakfast Tea",
       "Irish Breakfast Tea is a blend of several black teas.",
+      "Black Tea",
       categories[1],
       "4.50",
       "321"
@@ -118,6 +125,7 @@ async function getItems() {
     itemCreate(6,
       "Classic White Tea",
       "This white tea is a low-caffeine floral-flavored tea.",
+      "White Tea",
       categories[2],
       "6.50",
       "226"
@@ -125,6 +133,7 @@ async function getItems() {
     itemCreate(7,
       "Raspberry White Tea",
       "This white tea has a hint of raspberry flavor.",
+      "White Tea",
       categories[2],
       "4.50",
       "987"
@@ -132,6 +141,7 @@ async function getItems() {
     itemCreate(8,
       "Melon White Tea",
       "The Melon White Tea has a strong melon taste that is very refreshing.",
+      "White Tea",
       categories[2],
       "3.75",
       "57"

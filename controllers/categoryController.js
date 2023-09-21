@@ -20,7 +20,7 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
     // const category = await Category.findById(req.params.id).exec()
     const [category, allTeaInCategory] = await Promise.all([
         Category.findById(req.params.id).exec(),
-        Item.find({ category_name: req.params.id }).exec(),
+        Item.find({ category_id: req.params.id }).exec(),
     ]);
 
     if (category === null) {

@@ -1,5 +1,9 @@
 const Item = require("../models/item");
 const asyncHandler = require("express-async-handler");
+const Category = require("../models/category");
+const category = require("../models/category");
+
+
 
 //Display a list of all items//
 exports.item_list = asyncHandler(async (req, res, next) => {
@@ -11,7 +15,11 @@ exports.item_list = asyncHandler(async (req, res, next) => {
 
 //Display a detail page for each item//
 exports.item_detail = asyncHandler(async (req, res, next) => {
-    const itemDetail = await Item.findById(req.params.id).populate().exec();
+    const [item, itemDetail] = await Promise.all([
+        Item.findById(req.params.id).populate().exec(),
+        // Category.findById(req.params.id).exec(),
+        // Item.find({ category_name: req.params.id }).exec(),
+    ]);
 
     if (itemDetail === null) {
         const err = new Error("Item Not Found");
@@ -20,11 +28,12 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
     }
 
     res.render("item_detail", {
-        item_name: item_name,
-        item_description: item_description,
-        category_name: category_name,
-        item_price: item_price,
-        number_in_stock: number_in_stock,
+        item_name: item.item_name,
+        item_description: item.item_description,
+        category_name: item.category_name,
+        item_price: item.item_price,
+        number_in_stock: item.number_in_stock,
+        itemDetail: itemDetail,
     })
 });
 
