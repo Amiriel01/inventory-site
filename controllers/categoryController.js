@@ -36,10 +36,9 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
     })
 });
 
-
 //Display Category create form on GET//
 exports.category_create_get = (req, res, next) => {
-    res.render("category_form", { title: "Create New Category"});
+    res.render("category_form", { title: "Create New Category" });
 };
 
 //Handle Category create on POST//
@@ -48,7 +47,7 @@ exports.category_create_post = [
     body("category_name", 'Tea category is blank.')
     //trim so there is no white space around the name//
     .trim()
-    //check to make sure it is at least 5 characters//
+    //check to make sure it is at least 1 characters//
     .isLength({ min: 1 })
     .escape(),
 
@@ -59,7 +58,7 @@ exports.category_create_post = [
 
         //create tea category object with escaped and trimmed information//
         const category = new Category({ category_name: req.body.category_name });
-
+        
         if (!errors.isEmpty()) {
             //If there are errors, render the form again with the sanitized values/error messages.
             res.render("category_form", {
@@ -71,6 +70,7 @@ exports.category_create_post = [
         } else {
             //Form data is valid. Check to be sure the tea category does not already exist//
             const categoryExists = await Category.findOne({ category_name: req.body.category_name })
+            
             //use collation to check for letter case matches so that words with capitals and lower cases don't create duplicates//
             .collation({ locale: "en", strength: 2 })
             .exec();
