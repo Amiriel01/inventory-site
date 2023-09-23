@@ -88,12 +88,44 @@ exports.category_create_post = [
 
 //Display Category delete form on GET//
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Category Delete GET");
+    const [category, allItemsInCategory] = await Promise.all([
+        Category.findById(req.params.id).exec(),
+        Item.find({ category: req.params.id }).exec(),
+    ]);
+
+    if (category === null) {
+        //no result for category//
+        res.redirect("inventory/category");
+    }
+
+    res.render("category_delete", {
+        title: "Delete Category",
+        category: category,
+        category_items: allItemsInCategory,
+    });
 });
 
 //Handle Category delete on POST//
 exports.category_delete_post = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Category Delete POST");
+    //get details of category and items//
+    const [category, allItemsInCategory] = await Promise.all([
+        Category.findById(req.params.id).exec(),
+        Item.find({ category: req.params.id }).exec(),
+    ]);
+
+    if (allItemsInCategory.length > 0) {
+        //category has items//
+        res.render("category_delete", {
+            title: "Delete Category",
+            category: category,
+            category_items: allItemsInCategory,
+        });
+        return;
+    } else {
+        //category has no items, delete category and redirect to list of categories//
+        await Category.findByIdAndRemove(req.body.categoryid);
+        res.redirect("/inventory/category");
+    }
 });
 
 //Display Category update form on GET//

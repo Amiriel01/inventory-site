@@ -2,7 +2,7 @@ const Item = require("../models/item");
 const asyncHandler = require("express-async-handler");
 const Category = require("../models/category");
 const { body, validationResult } = require("express-validator");
-const category = require("../models/category");
+// const category = require("../models/category");
 
 //Display a list of all items//
 exports.item_list = asyncHandler(async (req, res, next) => {
@@ -47,14 +47,14 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
 
 //Handle Item create on POST//
 exports.item_create_post = [
-    //convert category to an array for choosing from//
-    // (req, res, next) => {
-    //     if (!(req.body.category_name instanceof Array)) {
-    //         if (typeof req.body.category_name === "undefined") req.body.category_name = [];
-    //         else req.body.category_name = new Array(req.body.category_name);
-    //     }
-    //     next();
-    // },
+    // convert category to an array for choosing from//
+    (req, res, next) => {
+        if (!(req.body.category_name instanceof Array)) {
+            if (typeof req.body.category_name === "undefined") req.body.category_name = [];
+            else req.body.category_name = new Array(req.body.category_name);
+        }
+        next();
+    },
 
     //validate and sanitize fields//
     body("item_name", "Item name must be completed.")

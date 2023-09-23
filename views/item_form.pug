@@ -14,7 +14,8 @@ block content
         div.form-group 
             label(for='category_name') Tea Category: 
             select#category_name.form-control(type='select', placeholder='Select Tea Category' name='category_name' required='true')
-                option(value=category_name) #{category_name}
+                for category_name in items
+                    option(value=item.category_name) #{item.category_name}
         div.form-group 
             label(for="item_price") Item Price: 
             input#item_price.form-control(type='text', placeholder="Price of Item" name='item_price' required='true' value=(undefined===item ? '' : item.item_price))
