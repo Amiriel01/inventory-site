@@ -31,6 +31,7 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
     console.log(allTeaInCategory)
     res.render("category_detail", {
         //pass in list of items//
+        category:category,
         category_name: category.category_name,
         category_items: allTeaInCategory,
     })

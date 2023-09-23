@@ -8,17 +8,21 @@ block content
         div.form-group 
             label(for="item_name") Item Name: 
             input#item_name.form-control(type='text', placeholder="Name of Tea Variety" name='item_name' required='true' value=(undefined===item ? '' : item.item_name))
+
         div.form-group 
             label(for="item_description") Item Description: 
             input#item_description.form-control(type='text', placeholder='Item Description' name='item_description' required='true' value=(undefined===item ? '' : item.item_description))
+
         div.form-group 
-            label(for='category_name') Tea Category: 
-            select#category_name.form-control(type='select', placeholder='Select Tea Category' name='category_name' required='true')
-                for category_name in items
-                    option(value=item.category_name) #{item.category_name}
+            label(for='category_id') Tea Category: 
+            select#category_id.form-control(type='select', placeholder='Select Tea Category' name='category_id' required='true')
+                for category in allCategories
+                    option(value=category._id) #{category.category_name}
+
         div.form-group 
             label(for="item_price") Item Price: 
             input#item_price.form-control(type='text', placeholder="Price of Item" name='item_price' required='true' value=(undefined===item ? '' : item.item_price))
+
         div.form-group 
             label(for="number_in_stock") Number In Stock: 
             input#number_in_stock.form-control(type='text', placeholder="Number In Stock" name='number_in_stock' required='true' value=(undefined===item ? '' : item.number_in_stock))

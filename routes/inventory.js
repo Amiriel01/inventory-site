@@ -31,9 +31,6 @@ router.post("/category/:id/update", category_controller.category_update_post);
 //GET request for one Category//
 router.get("/category/:id", category_controller.category_detail);
 
-// //GET request for a list of all Categories//
-// router.get("/categories", category_controller.category_list);
-
 //list routes//
 
 //GET request for creating an Item. (Must come before routes that contine item ids)//

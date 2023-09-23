@@ -13,25 +13,22 @@ exports.item_list = asyncHandler(async (req, res, next) => {
 
 //Display a detail page for each item//
 exports.item_detail = asyncHandler(async (req, res, next) => {
-    const [item, itemDetail] = await Promise.all([
-        Item.findById(req.params.id).populate().exec(),
-        // Category.findById(req.params.id).exec(),
-        // Item.find({ category_name: req.params.id }).exec(),
+    const [item] = await Promise.all([
+        Item.findById(req.params.id).populate("category_id").exec(),
     ]);
 
-    if (itemDetail === null) {
-        const err = new Error("Item Not Found");
-        err.status = 404;
-        return next(err);
-    }
+    // if (item === null) {
+    //     const err = new Error("Item Not Found");
+    //     err.status = 404;
+    //     return next(err);
+    // }
 
     res.render("item_detail", {
         item_name: item.item_name,
         item_description: item.item_description,
-        category_name: item.category_name,
         item_price: item.item_price,
         number_in_stock: item.number_in_stock,
-        itemDetail: itemDetail,
+        item:item,
     })
 });
 
@@ -47,13 +44,13 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
 //Handle Item create on POST//
 exports.item_create_post = [
     // convert category to an array for choosing from//
-    (req, res, next) => {
-        if (!(req.body.category_name instanceof Array)) {
-            if (typeof req.body.category_name === "undefined") req.body.category_name = [];
-            else req.body.category_name = new Array(req.body.category_name);
-        }
-        next();
-    },
+    // (req, res, next) => {
+    //     if (!(req.body.category_name instanceof Array)) {
+    //         if (typeof req.body.category_name === "undefined") req.body.category_name = [];
+    //         else req.body.category_name = new Array(req.body.category_name);
+    //     }
+    //     next();
+    // },
 
     //validate and sanitize fields//
     body("item_name", "Item name must be completed.")
@@ -64,9 +61,8 @@ exports.item_create_post = [
         .trim()
         .isLength({ min: 1 })
         .escape(),
-    body("category_name","Category name must be completed.")
-        .trim()
-        .isLength({ min: 1 })
+    body("category_id","Category id must be completed.")
+        .notEmpty()
         .escape(),
     body("item_price", "Item price must be completed.")
         .trim()
@@ -85,7 +81,7 @@ exports.item_create_post = [
         const item = new Item({
             item_name: req.body.item_name,
             item_description: req.body.item_description,
-            category_name: req.body.category_name,
+            category_id: req.body.category_id,
             item_price: req.body.item_price,
             number_in_stock: req.body.number_in_stock,
         });
