@@ -1,0 +1,17 @@
+extends layout 
+
+block content 
+
+    h1 Item Name 
+    
+    h2 #{itemInstance.item_name}
+
+    h1 Item Description: 
+
+    h2 #{itemInstance.item_description}
+
+    form(method='POST' action='')
+            div.form-group 
+                input#itemInstanceid.form-control(type='hidden', name='itemInstanceid', required='true', value=itemInstance._id)
+
+            button.btn.btn-primary(type='submit') Delete Item 

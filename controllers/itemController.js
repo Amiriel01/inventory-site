@@ -13,16 +13,8 @@ exports.item_list = asyncHandler(async (req, res, next) => {
 
 //Display a detail page for each item//
 exports.item_detail = asyncHandler(async (req, res, next) => {
-    const [item] = await Promise.all([
-        Item.findById(req.params.id).populate("category_id").exec(),
-    ]);
-
-    // if (item === null) {
-    //     const err = new Error("Item Not Found");
-    //     err.status = 404;
-    //     return next(err);
-    // }
-
+    const item = await Item.findById(req.params.id).populate("category_id").exec()
+    
     res.render("item_detail", {
         item_name: item.item_name,
         item_description: item.item_description,
@@ -43,14 +35,6 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
 
 //Handle Item create on POST//
 exports.item_create_post = [
-    // convert category to an array for choosing from//
-    // (req, res, next) => {
-    //     if (!(req.body.category_name instanceof Array)) {
-    //         if (typeof req.body.category_name === "undefined") req.body.category_name = [];
-    //         else req.body.category_name = new Array(req.body.category_name);
-    //     }
-    //     next();
-    // },
 
     //validate and sanitize fields//
     body("item_name", "Item name must be completed.")
@@ -91,13 +75,6 @@ exports.item_create_post = [
             //get all categories for the form//
             const allCategories = await Category.find().exec()
 
-        // //mark selected category with a check mark in form//
-        // for (const allCategories of allCategories) {
-        //     if (item.allCategories.includes(allCategories.category_name)) {
-        //         allCategories.checked = "true";
-        //     }
-        // }
-
             res.render("item_form", {
                 title: "Create New Item",
                 allCategories: allCategories,
@@ -114,12 +91,20 @@ exports.item_create_post = [
 
 //Display Item delete form on GET//
 exports.item_delete_get = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Item Delete GET");
+    const itemInstance = await Item.findById(req.params.id).populate().exec()
+
+    res.render("item_delete", {
+        title: "Delete Item",
+        itemInstance: itemInstance,
+    })
 });
 
 //Handle Item delete on POST//
 exports.item_delete_post = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Item Delete POST");
+    const itemInstance = await Item.findById(req.params.id);
+    
+    await Item.findByIdAndRemove(req.body.itemInstanceid);
+    res.redirect("/inventory/items");
 });
 
 //Display Item update form on GET//
