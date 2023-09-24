@@ -14,13 +14,13 @@ exports.item_list = asyncHandler(async (req, res, next) => {
 //Display a detail page for each item//
 exports.item_detail = asyncHandler(async (req, res, next) => {
     const item = await Item.findById(req.params.id).populate("category_id").exec()
-    
+
     res.render("item_detail", {
         item_name: item.item_name,
         item_description: item.item_description,
         item_price: item.item_price,
         number_in_stock: item.number_in_stock,
-        item:item,
+        item: item,
     })
 });
 
@@ -45,7 +45,7 @@ exports.item_create_post = [
         .trim()
         .isLength({ min: 1 })
         .escape(),
-    body("category_id","Category id must be completed.")
+    body("category_id", "Category id must be completed.")
         .notEmpty()
         .escape(),
     body("item_price", "Item price must be completed.")
@@ -102,17 +102,78 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
 //Handle Item delete on POST//
 exports.item_delete_post = asyncHandler(async (req, res, next) => {
     const itemInstance = await Item.findById(req.params.id);
-    
+
     await Item.findByIdAndRemove(req.body.itemInstanceid);
     res.redirect("/inventory/items");
 });
 
 //Display Item update form on GET//
 exports.item_update_get = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Item Update GET");
+
+    const [item, allCategories] = await Promise.all([
+        Item.findById(req.params.id).populate("category_id").exec(),
+        Category.find().exec(),
+    ])
+
+    res.render("item_form", {
+        title: "Update Item",
+        allCategories: allCategories,
+        item: item,
+    })
 });
 
 //Handle Item update on POST//
-exports.item_update_post = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Item Update POST");
-});
+exports.item_update_post = [
+    //validate and sanitize fields//
+    body("item_name", "Item name must be completed.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("item_description", "Item description must be completed.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("category_id", "Category id must be completed.")
+        .notEmpty()
+        .escape(),
+    body("item_price", "Item price must be completed.")
+        .trim()
+        .isLength({ min: 4 })
+        .escape(),
+    body("number_in_stock", "Number in stock must be completed.")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+
+    //process request after validation and sanitize//
+    asyncHandler(async (req, res, next) => {
+        //extract to validation errors from the request//
+        const errors = validationResult(req);
+
+        //update item object with escaped and trimmed info//
+        let item = {
+            item_name: req.body.item_name,
+            item_description: req.body.item_description,
+            category_id: req.body.category_id,
+            item_price: req.body.item_price,
+            number_in_stock: req.body.number_in_stock,
+        };
+
+        if (!errors.isEmpty()) {
+            //If there are errors, render the form again with the sanitized values/error messages.
+
+            res.render("item_form", {
+                title: "Update Item",
+                allCategories: allCategories,
+                item: item,
+                errors: errors.array(),
+            });
+            return;
+        } else {
+            //item has no items, update item and redirect to list of categories//
+            item = await Item.findByIdAndUpdate(req.params.id, item);
+            return res.redirect(item.url);
+        }
+
+    })
+]

@@ -4,7 +4,7 @@ block content
 
     h1= title 
 
-    form(method = 'POST' action = '')
+    form(method ='POST' action = '')
         div.form-group 
             label(for="item_name") Item Name: 
             input#item_name.form-control(type='text', placeholder="Name of Tea Variety" name='item_name' required='true' value=(undefined===item ? '' : item.item_name))

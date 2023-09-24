@@ -31,7 +31,7 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
     console.log(allTeaInCategory)
     res.render("category_detail", {
         //pass in list of items//
-        category:category,
+        category: category,
         category_name: category.category_name,
         category_items: allTeaInCategory,
     })
@@ -46,11 +46,11 @@ exports.category_create_get = (req, res, next) => {
 exports.category_create_post = [
     //validate and sanitize the category_name field//
     body("category_name", 'Tea category is blank.')
-    //trim so there is no white space around the name//
-    .trim()
-    //check to make sure it is at least 1 characters//
-    .isLength({ min: 1 })
-    .escape(),
+        //trim so there is no white space around the name//
+        .trim()
+        //check to make sure it is at least 1 characters//
+        .isLength({ min: 1 })
+        .escape(),
 
     //process request after validation and sanitation//
     asyncHandler(async (req, res, next) => {
@@ -59,7 +59,7 @@ exports.category_create_post = [
 
         //create tea category object with escaped and trimmed information//
         const category = new Category({ category_name: req.body.category_name });
-        
+
         if (!errors.isEmpty()) {
             //If there are errors, render the form again with the sanitized values/error messages.
             res.render("category_form", {
@@ -71,10 +71,10 @@ exports.category_create_post = [
         } else {
             //Form data is valid. Check to be sure the tea category does not already exist//
             const categoryExists = await Category.findOne({ category_name: req.body.category_name })
-            
-            //use collation to check for letter case matches so that words with capitals and lower cases don't create duplicates//
-            .collation({ locale: "en", strength: 2 })
-            .exec();
+
+                //use collation to check for letter case matches so that words with capitals and lower cases don't create duplicates//
+                .collation({ locale: "en", strength: 2 })
+                .exec();
             if (categoryExists) {
                 //category already exists, redirect to it's detail page//
                 res.redirect(categoryExists.url);
@@ -91,7 +91,7 @@ exports.category_create_post = [
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
     const [category, allItemsInCategory] = await Promise.all([
         Category.findById(req.params.id).exec(),
-        Item.find({category_id: req.params.id}).exec(),
+        Item.find({ category_id: req.params.id }).exec(),
     ]);
 
     // Category.findById(req.params.id).exec(),
@@ -134,10 +134,45 @@ exports.category_delete_post = asyncHandler(async (req, res, next) => {
 
 //Display Category update form on GET//
 exports.category_update_get = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Category Update GET");
+    const category = await Category.findById(req.params.id).exec();
+
+    res.render("category_form", { title: "Update Category", category: category });
 });
 
 //Handle Category update on POST//
-exports.category_update_post = asyncHandler(async (req, res, next) => {
-    res.send("Not Created Yet: Category Update POST");
-});
+exports.category_update_post = [
+    //validate and sanitize the category_name field//
+    body("category_name", 'Tea category is blank.')
+        //trim so there is no white space around the name//
+        .trim()
+        //check to make sure it is at least 1 characters//
+        .isLength({ min: 1 })
+        .escape(),
+
+    //process request after validation and sanitation//
+    asyncHandler(async (req, res, next) => {
+        //extract the validation errors from the request//
+        
+        const errors = validationResult(req);
+
+        //create tea category object with escaped and trimmed information//
+        let category = {
+            category_name: req.body.category_name,
+        };
+
+        if (!errors.isEmpty()) {
+            //If there are errors, render the form again with the sanitized values/error messages.
+            res.render("category_form", {
+                title: "Update Category",
+                category: category,
+                errors: errors.array(),
+            });
+            
+            return;
+        } else {
+            //category has no items, update category and redirect to list of categories//
+            category = await Category.findByIdAndUpdate(req.params.id, category);
+            return res.redirect(category.url);
+        }
+    }),
+];
