@@ -1,3 +1,5 @@
+require('dotenv').config()
+console.log(process.env) // remove this after you've confirmed it is working
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -13,7 +15,7 @@ const app = express();
 // Set up mongoose connection
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb+srv://Amiriel01:Code2022@cluster0.brm8bwh.mongodb.net/inventory_site?retryWrites=true&w=majority";
+const mongoDB = process.env.SECRET_KEY;
 
 main().catch((err) => console.log(err));
 async function main() {
